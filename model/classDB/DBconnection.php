@@ -1,24 +1,27 @@
 <?php
 
-class DBconnection {
+define("_DBTYPE", "mysql");
+define("_HOST", "localhost");
+define("_DB", "proveedores2");
+define("_USSER", "root");
+define("_PASS", "root");
+
+abstract class DBconnection{
 
     private static $_instance;
 
-    protected function getConnection($_database, $_host = "localhost", $_username = "root", $_password = "root") {
+    protected function getConnection() {
         if(!self::$_instance) {
-            @self::$_instance =  new mysqli($_host, $_username, $_password, $_database);
-            DBconnection::checkConnection(@self::$_instance);
+            try {
+                self::$_instance =  new PDO(_DBTYPE . ':host=' . _HOST . ';dbname=' . _DB, _USSER, _PASS);
+                self::$_instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            }
+            catch (PDOException $_exception) {
+                return new DBerror('Se ha producido un error en la conexion', $_exception->getCode(), $_exception->getMessage());
+            }
         }
         return self::$_instance;
     }
 
-    public function checkConnection($_connection){
-        if($_connection->connect_errno){
-            echo "Error numero: " . $_connection->connect_errno . "<br>";
-            echo "Error: " . $_connection->connect_error . "<br>";
-            exit();
-        }
-    }
-
-    public function disconnect(){ $this->_connection->close(); }
+    public function disconnect(){ self::$_instance = null; }
 }

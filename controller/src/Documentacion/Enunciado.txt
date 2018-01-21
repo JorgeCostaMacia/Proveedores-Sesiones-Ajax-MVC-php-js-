@@ -1,52 +1,62 @@
-Carro de la compra con las siguientes caracter�sticas: 
 
-Usar la base de datos ProveedoresCarrito (la misma que proveedores, pero con las entidades usuarios y un carritos no procesados).
-Adem�s, en pieza, a�adiremos un campo ruta_imagen, donde estar� almacenada las im�genes de las distintas piezas.
+Base de datos proveedores2: (es la misma que siempre pero mira las CLAVES AJENAS del final)
 
-Logueo con usuario y contrase�a
-
-Control de logueo mediante sesiones
-
-Clases Carrito y Pieza.
-
-La definici�n de las clase deber� poseer todos los m�todos m�gicos utilizados:constructor, tostring y clonado, este �ltimo s�lo si hay que redefinirlo.
-
-Buscador de art�culos: Por nombre, n�mero y el precio.
-
-A�adir Articulo al carrito. (Control de todos los posibles errores)
-
-Ver Carrito.
-
-Dentro de ver carrito posibilidad de:
-
-Borrar una pieza de carrito.
-
-Modificar la cantidad de pieza del carrito.
-
-Procesar Carrito: Usando base de datos almacenar la informaci�n del carrito en pedido y l�nea de pedidos en ese vendedor. Ten en cuenta que los carritos se transforman y se almacenan en pedido->l�neas de pedidos.
-
-Posibilidad de almacenar el �ltimo carrito sin procesar de dicho usuario para poder usarlo posteriormente. Ejemplo: Me dejo a medio un carrito, lo almaceno (pero no es un pedido) y lo puedo usar posteriormente. Evidentemente la pr�xima vez que entre, deber� cargarlo autom�ticamente.
-
-Vaciar Carrito
-
-Ver Pedidos: Buscador de pedidos del vendedor logueado por:
-
-Busqueda por Numpedido
-
-Busqueda por Fecha
-
-Busqueda por numpieza
-
-Busqueda nompieza y cantidad
-
-Una vez buscado, debemos poder eliminar el pedido
-
-Logout.php
+Alta de datos en la tabla preciosum
 
 
 
-Condiciones:
+Alta de datos en la tabla Vendedor con sus controles correspondientes.
 
-OBLIGATORIO:Utilizar transacciones en aquellos lugares donde se produzcan multiples modificaciones/inserciones/borrados de datos.
+Buscador de preciosum, por los campos: pieza, vendedor, nombre de la pieza, nombre de vendedor, provincia del vendedor y rango de precios.
 
-OBLIGATORIO: Usar consultas preparadas en la pantalla de logueo y en el proceso de Procesar Carrito.
+Borrado preciosum.
+
+Modificación de preciosum. Con los controles correspondientes
+
+Buscador/Ver Vendedores.
+
+Borrar Vendedores. Controlando que se puedan borrar.
+
+Modificar Vendedores: Con sus controles correspondientes, además impedir la actualización de aquellos campos relacionados con otras tablas.
+
+Buscador/Ver Pieza.
+
+Borrar Piezas. Controlando que se puedan borrar.
+
+Modificar Vendedores: Con sus controles correspondientes, además impedir la actualización de aquellos campos relacionados con otras tablas.
+
+
+NOTA: OBSERVA LAS CLAVES AJENAS
+
+PRECIOSUM (numpieza Texto(16), numvend Entero, preciounit integer, diassum Entero, descuento Entero)
+
+Clave primaria: numpieza, numvend
+
+Clave ajena:	numpieza -> PIEZA
+
+Numvend -> VENDEDOR
+
+Ambas, Borrado: Rechazar, Actualizacion: Propagar
+
+
+PEDIDO (numpedido Entero, numvend Entero, fecha Fecha/Hora)
+
+Clave primaria: numpedido
+
+Clave ajena: numvend -> VENDEDOR, Borrado: Rechazar, Actualizacion: Propagar
+
+LINPED (numpedido Entero, numlinea Entero, numpieza Texto (16), preciocompra integer, cantpedida Entero, fecharecep Fecha/Hora, cantrecibida Entero)
+
+Clave primaria: numpedido, numlinea
+
+Clave ajena: numpedido -> PEDIDO Borrado: Rechazar, Actualizacion: Propagar
+
+Numpieza -> PIEZA Borrado: Rechazar, Actualizacion: Rechazar
+
+INVENTARIO (numpieza Texto (16), numbin Entero, cantdisponible Entero, fecharecuento Fecha/Hora, periodorecuen Entero, cantajuste Entero, cartreord Entero, puntoreord Entero)
+
+Clave primaria: numbin
+
+Clave alternativa: numpieza
+
+Clave ajena: numpieza -> PIEZA Borrado: Cascada, Actualizacion: Rechazar

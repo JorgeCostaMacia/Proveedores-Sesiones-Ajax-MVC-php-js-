@@ -1,5 +1,5 @@
 <?php
-    include_once "model/classApp/Usuario.php";
+    include_once "controller/includes/autoloader.php";
     session_start();
 ?>
 
@@ -9,7 +9,7 @@
     <head> <?php include_once "views/layout/head.php"; ?></head>   <!-- HEAD -->
 
     <body>
-        <?php include_once "controller/primaryController.php"; ?>          <!-- CONTROLADOR-->
-        <?php include_once "views/layout/footer.php"; ?>            <!-- FOOTER + IMPORT JS-->
+        <?php include_once "controller/controller.php"; ?>          <!-- CONTROLADOR-->
+        <?php include_once "views/layout/footer.php"; ?>            <!-- FOOTER -->
     </body>
 </html>

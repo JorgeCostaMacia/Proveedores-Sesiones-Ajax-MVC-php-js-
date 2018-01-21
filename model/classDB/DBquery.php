@@ -1,134 +1,244 @@
 <?php
 
-include_once "DBconnection.php";
+abstract class DBquery extends DBconnection {
 
-//while para leer el todo el objeto
-//$conexion->query($sql)->fetch_assoc()
-//fetch_array() Devuelve resultado duplicado    indice posicion y y asociativo
-//fetch_row()   Devuelve resultado por posicion
-//fetch_assoc() Devuelve resultado por asociativo
-//fetch_object()    Devuelve un objeto con atributos
+    public function _createDB($_name){
+        $_ressult = [];
 
-class DBquery extends DBconnection {
+        try {
+            $ressult = $this->_connection->prepare('CREATE DATABASE ' . $_name . ";");
+            $_ressult['ressult'] = $ressult->execute();
+        }
+        catch (PDOException $_exception) {
+            $_ressult["error"] = new DBerror('No se ha podido realizar la accion: Crear base de datos', $_exception->getCode(), $_exception->getMessage());
+        }
 
-    public function _create($_create, $_name, $_values = ""){
-        return @$this->_connection->query('CREATE '. $_create . ' ' . $_name . " " . $_values . ";");
+        return $_ressult;
     }
 
     public function _dropDB($_dropDatabase){
-        return @$this->_connection->query('DROP DATABASE '. $_dropDatabase . ";");
+        $_ressult = [];
+
+        try {
+            $ressult = $this->_connection->prepare('DROP DATABASE '. $_dropDatabase . ";");
+            $_ressult['ressult'] = $ressult->execute();
+        }
+        catch (PDOException $_exception) {
+            $_ressult["error"] = new DBerror('No se ha podido realizar la accion: Borrar base de datos', $_exception->getCode(), $_exception->getMessage());
+        }
+
+        return $_ressult;
+    }
+
+    public function _createTable($_name, $_values = ""){
+        $_ressult = [];
+
+        try {
+            $ressult = $this->_connection->prepare('CREATE TABLE ' . $_name . ' ' . $_values . ";");
+            $_ressult['ressult'] = $ressult->execute();
+        }
+        catch (PDOException $_exception) {
+            $_ressult["error"] = new DBerror('No se ha podido realizar la accion: Crear tabla', $_exception->getCode(), $_exception->getMessage());
+        }
+
+        return $_ressult;
     }
 
     public function _dropTable($_dropTable){
-        return @$this->_connection->query('DROP TABLE '. $_dropTable . ";");
+        $_ressult = [];
+
+        try {
+            $ressult = $this->_connection->prepare('DROP TABLE '. $_dropTable . ";");
+            $_ressult['ressult'] = $ressult->execute();
+        }
+        catch (PDOException $_exception) {
+            $_ressult["error"] = new DBerror('No se ha podido realizar la accion: Borrar tabla', $_exception->getCode(), $_exception->getMessage());
+        }
+
+        return $_ressult;
     }
 
     public function _truncateTable($_truncateTable){
-        return @$this->_connection->query('TRUNCATE TABLE '. $_truncateTable . ";");
+        $_ressult = [];
+
+        try {
+            $ressult = $this->_connection->prepare('TRUNCATE TABLE '. $_truncateTable . ";");
+            $_ressult['ressult'] = $ressult->execute();
+        }
+        catch (PDOException $_exception) {
+            $_ressult["error"] = new DBerror('No se ha podido realizar la accion: Truncar tabla', $_exception->getCode(), $_exception->getMessage());
+        }
+
+        return $_ressult;
     }
 
     public function _setFK($_setFOREIGN_KEY_CHECKS = "1"){
-        @$this->_connection->query('SET FOREIGN_KEY_CHECKS= '. $_setFOREIGN_KEY_CHECKS . ";");
+        $_ressult = [];
+        try {
+            $ressult = $this->_connection->prepare('SET FOREIGN_KEY_CHECKS= '. $_setFOREIGN_KEY_CHECKS . ";");
+            $_ressult['ressult'] = $ressult->execute();
+        }
+        catch (PDOException $_exception) {
+            $_ressult["error"] = new DBerror('No se ha podido realizar la accion: Cambiar FK', $_exception->getCode(), $_exception->getMessage());
+        }
+
+        return $_ressult;
     }
 
     public function _setAutocommit($autocommit = "true"){
-        @$this->_connection->autocommit($autocommit);
+        $_ressult = [];
+        try {
+            $this->_connection->autocommit($autocommit);
+        }
+        catch (PDOException $_exception) {
+            $_ressult["error"] = new DBerror('No se ha podido realizar la accion: Cambiar autocommit', $_exception->getCode(), $_exception->getMessage());
+        }
+
+        return $_ressult;
     }
 
+    public function _setSAFE_UPDATES($SQL_SAFE_UPDATES = "1"){
+        $_ressult = [];
+        try {
+            $ressult = $this->_connection->prepare('SET SQL_SAFE_UPDATES= '. $SQL_SAFE_UPDATES . ";");
+            $_ressult['ressult'] = $ressult->execute();
+        }
+        catch (PDOException $_exception) {
+            $_ressult["error"] = new DBerror('No se ha podido realizar la accion: Cambiar FK', $_exception->getCode(), $_exception->getMessage());
+        }
+
+        return $_ressult;
+    }
 
     public function _select($_select, $_from, $more = ""){
-        return @$this->_connection->query('SELECT '. $_select . ' FROM ' . $_from . " " . $more . ";");
+        $_ressult = [];
+
+        try {
+            $ressult = $this->_connection->prepare('SELECT '. $_select . ' FROM ' . $_from . " " . $more . ";");
+            $ressult->execute();
+            $_ressult['ressult'] = $ressult;
+        }
+        catch (PDOException $_exception) {
+            $_ressult["error"] = new DBerror('No se ha podido realizar la accion: Select', $_exception->getCode(), $_exception->getMessage());
+        }
+
+        return $_ressult;
     }
 
-    public function format_select($_ressult){
-        if($_ressult != false) { return $_ressult->fetch_all(MYSQLI_ASSOC); }
+    public function format_select_Object($_ressult, $className){
+        $_ressult->setFetchMode(PDO::FETCH_CLASS, $className);
+        return $_ressult->fetchAll();
+    }
+
+    public function format_select_Assoc($_ressult){
+        return $_ressult->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function _insert($_insertInto, $_values) {
-        if(@$this->_connection->query('INSERT INTO ' . $_insertInto . ' VALUES ' . $_values . ';')){ return $this->_connection->affected_rows; }
+        $_ressult = [];
+
+        try {
+            $ressult = $this->_connection->prepare('INSERT INTO ' . $_insertInto . ' VALUES ' . $_values . ';');
+            $ressult->execute();
+            $_ressult['ressult'] = $ressult->rowCount();
+        }
+        catch (PDOException $_exception) {
+            $_ressult["error"] = new DBerror('No se ha podido realizar la accion: Insert', $_exception->getCode(), $_exception->getMessage());
+        }
+
+        return $_ressult;
     }
 
     public function _insertSelect($_insertInto, $_select, $_from, $more = "") {
-        if(@$this->_connection->query('INSERT INTO ' . $_insertInto . ' SELECT ' . $_select . ' FROM ' . $_from . ' ' .$more . ';')){ return $this->_connection->affected_rows; }
+        $_ressult = [];
+
+        try {
+            $ressult = $this->_connection->prepare('INSERT INTO ' . $_insertInto . ' SELECT ' . $_select . ' FROM ' . $_from . ' ' .$more . ';');
+            $ressult->execute();
+            $_ressult['ressult'] = $ressult->rowCount();
+        }
+        catch (PDOException $_exception) {
+            $_ressult["error"] = new DBerror('No se ha podido realizar la accion: Insert', $_exception->getCode(), $_exception->getMessage());
+        }
+
+        return $_ressult;
     }
 
     public function _update($_update, $_set, $more = ""){
-        if(@$this->_connection->query('UPDATE ' . $_update . ' SET ' . $_set . " " . $more . ';')){ return $this->_connection->affected_rows; }
+        $_ressult = [];
+
+        try {
+            $ressult = $this->_connection->prepare('UPDATE ' . $_update . ' SET ' . $_set . " " . $more . ';');
+            $ressult->execute();
+            $_ressult['ressult'] = $ressult->rowCount();
+        }
+        catch (PDOException $_exception) {
+            $_ressult["error"] = new DBerror('No se ha podido realizar la accion: Update', $_exception->getCode(), $_exception->getMessage());
+        }
+
+        return $_ressult;
     }
 
     public function _delete($_deleteFrom, $_where){
-        if(@$this->_connection->query('DELETE FROM ' . $_deleteFrom . ' WHERE ' . $_where . ';')){ return $this->_connection->affected_rows; }
-    }
+        $_ressult = [];
 
-    public function _deleteAll($_deleteFrom){
-        if(@$this->_connection->query('DELETE FROM ' . $_deleteFrom . ';')){ return $this->_connection->affected_rows; }
+        try {
+            $ressult = $this->_connection->prepare('DELETE FROM ' . $_deleteFrom . ' WHERE ' . $_where . ';');
+            $ressult->execute();
+            $_ressult['ressult'] = $ressult->rowCount();
+        }
+        catch (PDOException $_exception) {
+            $_ressult["error"] = new DBerror('No se ha podido realizar la accion: Delete', $_exception->getCode(), $_exception->getMessage());
+        }
+
+        return $_ressult;
     }
 
     public function _existInTable($tabla, $datos){
         $sql = "SELECT * FROM $tabla WHERE 1=1 ";
         foreach($datos as $value){
-            foreach ($value as $value2){
-                $sql .= 'AND' . $value2["column"] . ' =  ' . $value2["clave"];
-            }
+                $sql .= 'AND' . $value["column"] . ' =  ' . $value["clave"];
         }
-        $_ressult = $this->_connection->query($sql.";");
-        if(!$_ressult) { return null; }
-        else if($_ressult->affected_rows > 0){ return true; }
+
+        $_ressult = [];
+
+        try {
+            $ressult = $this->_connection->prepare($sql . ';');
+            $ressult->execute();
+            $_ressult['ressult'] = $ressult->rowCount();
+        }
+        catch (PDOException $_exception) {
+            $_ressult["error"] = new DBerror('No se ha podido realizar la accion: Existe en tablas', $_exception->getCode(), $_exception->getMessage());
+        }
+
+        if($_ressult['ressult'] > 0){ return true; }
         else { return false; }
-    }
-
-    public function _prepareLogin($loginEmail, $loginPassword = ""){
-        $arrayResut = [];
-        if( $loginPassword != ""){
-            $_ressult = $this->_connection->prepare('SELECT * FROM usuarios WHERE nomUsser = ? AND passUsser = ?');
-            $ok = $_ressult->bind_param('ss',$loginEmail, $loginPassword);
-            $ok = $_ressult->execute();
-        }
-        else {
-            $_ressult = $this->_connection->prepare('SELECT * FROM usuarios WHERE nomUsser = ?');
-            $ok = $_ressult->bind_param('s',$loginEmail);
-            $ok = $_ressult->execute();
-        }
-        if ($ok != FALSE) {
-            $nomUsser = "";
-            $passUsser = "";
-            $ok = $_ressult->bind_result($nomUsser, $passUsser);
-
-            while ($_ressult->fetch()) {
-                $arrayResut["nomUsser"] = $nomUsser;
-            }
-
-            $_ressult->close();
-
-            return $arrayResut;
-        }
-    }
-
-    public function _prepareGetAccount($loginEmail, $loginPassword){
-        $_ressult = $this->_connection->prepare('INSERT INTO usuarios  VALUES (?,?)');
-        $ok = $_ressult->bind_param('ss',$loginEmail, $loginPassword);
-        $ok = $_ressult->execute();
-        $_ressult->close();
     }
 
     public function _transaction($_querys){
         $_ressultControl = true;
         $_ressults = [];
-        $this->_connection->autocommit(false);
-        foreach($_querys as $key=>$_query){
-                $_ressults[$key] = [];
-                $_ressults[$key]["query"] = $_query;
-                $_ressults[$key]["ressult"] = $this->_connection->query($_query);
-                $_ressults[$key]["affectedRows"] = $this->_connection->affected_rows;
-                $_ressults[$key]["numError"] = $this->_connection->errno;
-                $_ressults[$key]["error"] = $this->_connection->error;
 
-                if($_ressults[$key]["ressult"] == false){ $_ressultControl = false; }
+        $this->_connection->beginTransaction();
+
+        foreach($_querys as $key=>$_query){
+            $_ressults[$key] = [];
+            $_ressults[$key]["query"] = $_query;
+
+            try {
+                $_ressults[$key]['ressult'] = $this->_connection->prepare($_query);
+                $_ressults[$key]['ressult']->execute();
+                $_ressults[$key]['rowCount'] = $_ressults[$key]['ressult']->rowCount();
+                $_ressults[$key]["error"] = "";
+            }
+            catch (PDOException $_exception) {
+                $_ressults[$key]["error"] = new DBerror('No se ha podido realizar la accion: Transaccion', $_exception->getCode(), $_exception->getMessage());
+                $_ressultControl = false;
+            }
         }
+
         if($_ressultControl == false){ $this->_connection->rollback(); }
         else { $this->_connection->commit(); }
-
-        $this->_connection->autocommit(true);
 
         return $_ressults;
     }

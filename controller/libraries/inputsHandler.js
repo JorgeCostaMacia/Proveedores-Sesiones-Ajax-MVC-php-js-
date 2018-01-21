@@ -1,53 +1,61 @@
 "use strict";
 
-// ** EVALUA FORM LOGIN NOMUSSER **
-//      RECOGE VALORES: NOMUSSER
-//      EVALUA SEA EMAIL - RETURN EVAL
-function validateMailLogin(loginEmailObject) {
-	let loginEmail = loginEmailObject.value;
-	let resultLoginEmail = false;
-
-	let aux = loginEmail.split("@");
-	if(aux.length == 2){ 
-		if(esTexto(aux[0])){ 
-			let aux2 = aux[1].split(".");
-			if(aux2.length == 2){ 
-				if(esTexto(aux2[0]) && esTexto(aux2[1])){
-					resultLoginEmail = true;
-				}
-			}
-		}
-	}
-	return resultLoginEmail;
+function validateNickLogin(loginNick) {
+	if(esTexto(loginNick) && loginNick.length >= 5){ return true; }
+	else { return false; }
 }
 
-// ** EVALUA FORM LOGIN PASS **
-//      RECOGE VALORES: PASS
-//      EVALUA SEA PASS - RETURN EVAL
-function validatePassLogin(loginPasswordObject) {
-	let loginPassword = loginPasswordObject.value;
-	if(esTexto(loginPassword) && loginPassword.length >= 8 ) { return true; }
+function validatePassLogin(loginPass) {
+	if(esTexto(loginPass) && loginPass.length >= 8) { return true; }
 	else { return false; }	
 }
-
-// ** EVALUA FORM LOGIN NOMUSSER PASS **
-//      RECOGE VALORES: PASS
-//      EVALUA SEA TEXTO - RETURN EVAL
-function esTexto(dato){
-    let controlLetra = true;
-    if(dato != "" && dato != null){
-        for(let i = 0; i < dato.length; i++){
-            if(!esLetra(dato[i])){ controlLetra = false; i = dato.length; }
-        }
-    } else { controlLetra = false; }
-    return controlLetra;
+function validateNombre(nombre){
+    if(esTextoEspacio(nombre) && nombre.length >= 3){ return true; }
+    else { return false; }
 }
 
-// ** EVALUA FORM LOGIN NOMUSSER PASS **
-//      RECOGE VALORES: PASS
-//      EVALUA SEA TEXTO - RETURN EVAL
-function esLetra(dato){
-    if((dato.charCodeAt() > 64  && dato.charCodeAt() < 91) || dato.charCodeAt() == 165 || dato.charCodeAt() == 164 ||
-        (dato.charCodeAt() > 96  && dato.charCodeAt() < 123)){ return true; }
-    else { return false;}
+function validateNomCom(nomCom){
+    if(esTextoEspacio(nomCom) && nomCom.length >= 3){ return true; }
+    else { return false; }
+}
+
+function validateTelf(telf){
+    if(esNumeroGuion(telf) && telf.length >= 9){ return true; }
+    else { return false; }
+}
+
+function validateCalle(calle){
+    if(esTextoEspacioPuntoComaBarraNumero(calle) && calle.length >= 5){ return true; }
+    else { return false; }
+}
+
+function validateCiudad(ciudad){
+    if(esTextoEspacio(ciudad) && ciudad.length >= 3){ return true; }
+    else { return false; }
+}
+
+function validateProvincia(provincia){
+    if(esTextoEspacio(provincia) && provincia.length >= 3){ return true; }
+    else { return false; }
+}
+
+function validateCp(cp){
+    if(esNumeros(cp) && cp.length == 5){ return true; }
+    else { return false; }
+}
+
+function validatePrecioSumAdd(num){
+    if(parseInt(num) == 0){ return true; }
+    else if(esNumeroPositivoEntero(num)){ return true; }
+    else { return false; }
+}
+
+function validateNumPiezaNomPieza(numpieza){
+    if(esTextoEspacioPuntoComaBarraGuionNumero(numpieza) && numpieza.length >= 1){ return true; }
+    else { return false; }
+}
+
+function validatePreciovent(preciovent){
+    if(esNumeroPositivoEntero(preciovent)){ return true; }
+    else { return false; }
 }
