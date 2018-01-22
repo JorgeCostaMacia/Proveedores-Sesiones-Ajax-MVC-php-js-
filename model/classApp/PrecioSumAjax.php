@@ -25,9 +25,9 @@ abstract class PrecioSumAjax extends VendedorAjax{
         $numpieza = trim(strtoupper($_POST["numpieza"]));
         $numvend = trim($_POST["numvend"]);
 
-        $_ressult = $_connection->_select('*', 'PRECIOSUM', 'WHERE numpieza="' . $numpieza . '" AND numvend=' . $numvend);
+        $_ressult = $_connection->_select('*', 'PRECIOSUM', 'INNER JOIN VENDEDOR ON PRECIOSUM.NUMVEND = VENDEDOR.NUMVEND WHERE numpieza="' . $numpieza . '" AND numvend=' . $numvend);
         if (isset($_ressult["ressult"])) {
-            $this->setPreciosums($_connection->format_select_Object($_ressult["ressult"], 'Preciosum'));
+            $this->setPreciosums($_connection->format_select_Object($_ressult["ressult"], 'PreciosumVendedor'));
         }
         else if (isset($_ressult["error"])) {
             $this->addErrores(new Error("Se ha producido un error durante la comprobacion de exist preciosum"));
@@ -67,9 +67,9 @@ abstract class PrecioSumAjax extends VendedorAjax{
         else if($typeSearch == "empieza"){ $whereParameter .= '"' . $itemSearch . '%"'; }
         else if($typeSearch == "termina"){ $whereParameter .= '"%' . $itemSearch . '"'; }
 
-        $_ressult = $_connection->_select('*', 'PRECIOSUM', 'WHERE ' . $campSearch . $whereParameter);
+        $_ressult = $_connection->_select('*', 'PRECIOSUM', 'INNER JOIN VENDEDOR ON PRECIOSUM.NUMVEND = VENDEDOR.NUMVEND WHERE ' . $campSearch . $whereParameter);
         if (isset($_ressult["ressult"])) {
-            $this->setPreciosums($_connection->format_select_Object($_ressult["ressult"], 'Preciosum'));
+            $this->setPreciosums($_connection->format_select_Object($_ressult["ressult"], 'PreciosumVendedor'));
         }
         else if (isset($_ressult["error"])) {
             $this->addErrores(new Error("Se ha producido un error durante la busqueda de preciosum"));

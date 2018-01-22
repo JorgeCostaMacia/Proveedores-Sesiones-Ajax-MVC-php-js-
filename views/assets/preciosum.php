@@ -16,6 +16,8 @@
             <option value="preciounit">Preciounit</option>
             <option value="diassum">Diassum</option>
             <option value="descuento">Descuento</option>
+            <option value="nomvend">Nombvend</option>
+            <option value="provincia">Provincia</option>
         </select>
     </div>
     <button type="button" id="buscarPreciosum" name="buscarPreciosum" class="btn btn-default">Buscar</button>

@@ -12,4 +12,6 @@ Las consultas se hacen utilizando AJAX
 
 La aplicacion esta distribuida en directorios segun pagina y dependencia
 
+Parámetros conexión en DBconnection
+
 Documentacion en controller/src/Documentation/

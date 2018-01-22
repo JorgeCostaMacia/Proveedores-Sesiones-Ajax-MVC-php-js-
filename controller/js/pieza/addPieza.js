@@ -24,7 +24,7 @@ function evaladdPieza(){
     if(!validatePreciovent(preciovent)) {
         errores.push(true);
         addClassHome();
-        msjDanger("Descuento solo admite numeros enteros positivos");
+        msjDanger("Preciovent solo admite numeros enteros positivos");
     }
 
     if(errores.length == 0){

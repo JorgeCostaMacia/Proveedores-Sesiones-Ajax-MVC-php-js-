@@ -50,6 +50,16 @@ function addTablaPreciosum(){
     trNode.appendChild(thNode);
 
     thNode = document.createElement('th');
+    textNode = document.createTextNode("Nomvend");
+    thNode.appendChild(textNode);
+    trNode.appendChild(thNode);
+
+    thNode = document.createElement('th');
+    textNode = document.createTextNode("Provincia");
+    thNode.appendChild(textNode);
+    trNode.appendChild(thNode);
+
+    thNode = document.createElement('th');
     textNode = document.createTextNode("Preciounit");
     thNode.appendChild(textNode);
     trNode.appendChild(thNode);
@@ -110,6 +120,28 @@ function addformPreciosum(ressult){
         inputNode.setAttribute('name', 'numvend---' + id);
         inputNode.setAttribute('id', 'numvend---' + id);
         inputNode.setAttribute('value', ressult[i]["NUMVEND"]);
+        inputNode.setAttribute('class', 'form-control');
+        inputNode.setAttribute('disabled', 'true');
+        tdNode.appendChild(inputNode);
+        trNode.appendChild(tdNode);
+
+        tdNode = document.createElement('td');
+        inputNode = document.createElement('input');
+        inputNode.setAttribute('type', 'text');
+        inputNode.setAttribute('name', 'nomvend---' + id);
+        inputNode.setAttribute('id', 'nomvend---' + id);
+        inputNode.setAttribute('value', ressult[i]["NOMVEND"]);
+        inputNode.setAttribute('class', 'form-control');
+        inputNode.setAttribute('disabled', 'true');
+        tdNode.appendChild(inputNode);
+        trNode.appendChild(tdNode);
+
+        tdNode = document.createElement('td');
+        inputNode = document.createElement('input');
+        inputNode.setAttribute('type', 'text');
+        inputNode.setAttribute('name', 'provincia---' + id);
+        inputNode.setAttribute('id', 'provincia---' + id);
+        inputNode.setAttribute('value', ressult[i]["PROVINCIA"]);
         inputNode.setAttribute('class', 'form-control');
         inputNode.setAttribute('disabled', 'true');
         tdNode.appendChild(inputNode);

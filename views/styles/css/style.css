@@ -1,5 +1,5 @@
 /** BODY **/
-body { width: 100%; }
+body { width: 100%;}
 
 /** NAV **/
 .sidebar1 {
@@ -60,6 +60,10 @@ body { width: 100%; }
 /** DIV MENSAJES **/
 #mensajes{
 	margin-top: 20px;
+}
+
+#tablaVendedor, #tablaPreciosum, #tablaPieza, #formAcountContainer, #formLoginContainer{
+	margin-bottom: 100px;
 }
 
 /** FOOTER **/

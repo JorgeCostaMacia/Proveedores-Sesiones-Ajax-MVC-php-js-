@@ -77,6 +77,8 @@ abstract class Json {
             $precio["PRECIOUNIT"] = $preciosum->getPRECIOUNIT();
             $precio["DIASSUM"] = $preciosum->getDIASSUM();
             $precio["DESCUENTO"] = $preciosum->getDESCUENTO();
+            $precio["NOMVEND"] = $preciosum->getNOMVEND();
+            $precio["PROVINCIA"] = $preciosum->getPROVINCIA();
             $_returned["preciosums"][] = $precio;
         }
 

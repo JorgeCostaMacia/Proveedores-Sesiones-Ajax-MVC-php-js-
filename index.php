@@ -10,6 +10,7 @@
 
     <body>
         <?php include_once "controller/controller.php"; ?>          <!-- CONTROLADOR-->
+        <div class="separador"> </div>
         <?php include_once "views/layout/footer.php"; ?>            <!-- FOOTER -->
     </body>
 </html>
